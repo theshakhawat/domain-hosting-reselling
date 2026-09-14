@@ -52,6 +52,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 
+  <!-- Alpine.js CDN -->
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
   <style>
     /* Custom scrollbar for clean dashboard look */
     ::-webkit-scrollbar {
@@ -144,6 +147,20 @@
         <span>FAQ Accordion</span>
       </a>
 
+      <!-- Support Inquiries & Tickets -->
+      <a href="{{ route('admin.contacts.index') }}"
+        class="flex items-center justify-between px-3 py-2 text-xs font-semibold rounded-lg transition-colors {{ request()->routeIs('admin.contacts.*') ? 'bg-brand-accent text-white shadow-sm shadow-brand-accent/30' : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-brand-card hover:text-brand-accent dark:hover:text-white' }}">
+        <div class="flex items-center gap-3">
+          <i class="fa-solid fa-headset w-4 text-center"></i>
+          <span>Support Inquiries</span>
+        </div>
+        @if(($unreadContactsCount ?? 0) > 0)
+          <span class="px-1.5 py-0.2 rounded-full text-[10px] font-mono font-bold bg-rose-500 text-white">
+            {{ $unreadContactsCount }}
+          </span>
+        @endif
+      </a>
+
       <div class="pt-4 px-3 py-1.5 text-[10px] font-mono uppercase tracking-wider text-slate-400 dark:text-slate-500 font-semibold">
         Configuration
       </div>
@@ -160,6 +177,20 @@
         class="flex items-center gap-3 px-3 py-2 text-xs font-semibold rounded-lg transition-colors {{ request()->routeIs('admin.visitors.*') ? 'bg-brand-accent text-white shadow-sm shadow-brand-accent/30' : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-brand-card hover:text-brand-accent dark:hover:text-white' }}">
         <i class="fa-solid fa-chart-line w-4 text-center"></i>
         <span>Visitors & Analytics</span>
+      </a>
+
+      <!-- Notifications -->
+      <a href="{{ route('admin.notifications.index') }}"
+        class="flex items-center justify-between px-3 py-2 text-xs font-semibold rounded-lg transition-colors {{ request()->routeIs('admin.notifications.*') ? 'bg-brand-accent text-white shadow-sm shadow-brand-accent/30' : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-brand-card hover:text-brand-accent dark:hover:text-white' }}">
+        <div class="flex items-center gap-3">
+          <i class="fa-regular fa-bell w-4 text-center"></i>
+          <span>Notifications</span>
+        </div>
+        @if(($unreadNotificationsCount ?? 0) > 0)
+          <span class="px-1.5 py-0.2 rounded-full text-[10px] font-mono font-bold bg-amber-500 text-white">
+            {{ $unreadNotificationsCount }}
+          </span>
+        @endif
       </a>
 
       <!-- Admin Profile -->
@@ -241,24 +272,53 @@
         <div class="relative">
           <button type="button" onclick="toggleDropdown('notificationDropdown')" class="w-9 h-9 rounded-lg border border-slate-200 dark:border-brand-slate/50 bg-slate-50 dark:bg-brand-card text-slate-500 dark:text-slate-400 hover:text-brand-accent dark:hover:text-brand-cyan flex items-center justify-center transition-colors focus:outline-none relative" title="Notifications">
             <i class="fa-regular fa-bell text-xs"></i>
-            <span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-brand-cyan ring-2 ring-white dark:ring-brand-dark"></span>
+            @if(($unreadNotificationsCount ?? 0) > 0)
+              <span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-rose-500 ring-2 ring-white dark:ring-brand-dark animate-pulse"></span>
+            @endif
           </button>
 
           <!-- Notification Dropdown Menu -->
-          <div id="notificationDropdown" class="hidden absolute right-0 mt-2 w-72 rounded-xl bg-white dark:bg-brand-card border border-slate-200 dark:border-brand-slate/50 shadow-xl py-2 z-50 animate-fadeIn">
+          <div id="notificationDropdown" class="hidden absolute right-0 mt-2 w-80 rounded-xl bg-white dark:bg-brand-card border border-slate-200 dark:border-brand-slate/50 shadow-2xl py-2 z-50 animate-fadeIn">
             <div class="px-4 py-2 border-b border-slate-100 dark:border-brand-slate/40 flex items-center justify-between">
-              <span class="text-xs font-semibold text-slate-900 dark:text-white">Notifications</span>
-              <span class="text-[10px] font-mono text-emerald-500 bg-emerald-500/10 px-1.5 py-0.5 rounded">All Healthy</span>
+              <div class="flex items-center gap-2">
+                <span class="text-xs font-bold text-slate-900 dark:text-white">Notifications</span>
+                @if(($unreadNotificationsCount ?? 0) > 0)
+                  <span class="text-[10px] font-mono text-rose-500 bg-rose-500/10 px-1.5 py-0.5 rounded font-semibold">{{ $unreadNotificationsCount }} New</span>
+                @else
+                  <span class="text-[10px] font-mono text-emerald-500 bg-emerald-500/10 px-1.5 py-0.5 rounded">All Clear</span>
+                @endif
+              </div>
+              @if(($unreadNotificationsCount ?? 0) > 0)
+                <form action="{{ route('admin.notifications.mark-all-read') }}" method="POST" class="inline m-0 p-0">
+                  @csrf
+                  <button type="submit" class="text-[10px] text-brand-accent hover:underline font-semibold">Mark read</button>
+                </form>
+              @endif
             </div>
-            <div class="divide-y divide-slate-100 dark:divide-brand-slate/30 text-xs">
-              <div class="px-4 py-2.5 hover:bg-slate-50 dark:hover:bg-brand-dark/40 transition-colors">
-                <p class="font-medium text-slate-800 dark:text-slate-200">System Cache Active</p>
-                <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">Homepage data query caching is optimized.</p>
-              </div>
-              <div class="px-4 py-2.5 hover:bg-slate-50 dark:hover:bg-brand-dark/40 transition-colors">
-                <p class="font-medium text-slate-800 dark:text-slate-200">Database Ready</p>
-                <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">All 12 plans and 6 TLDs synced smoothly.</p>
-              </div>
+
+            <div class="divide-y divide-slate-100 dark:divide-brand-slate/30 text-xs max-h-72 overflow-y-auto">
+              @forelse($recentAdminNotifications ?? [] as $notif)
+                <a href="{{ $notif->link ? route('admin.notifications.read', $notif) : route('admin.notifications.index') }}" class="block px-4 py-2.5 hover:bg-slate-50 dark:hover:bg-brand-dark/40 transition-colors {{ $notif->is_read ? 'opacity-70' : 'bg-blue-500/5' }}">
+                <a href="{{ route('admin.notifications.read', $notif) }}" class="block px-4 py-2.5 hover:bg-slate-50 dark:hover:bg-brand-dark/40 transition-colors {{ $notif->is_read ? 'opacity-70' : 'bg-blue-500/5' }}">
+                  <div class="flex items-start justify-between gap-2">
+                    <p class="font-semibold text-slate-800 dark:text-slate-200 truncate">{{ $notif->title }}</p>
+                    <span class="text-[10px] text-slate-400 font-mono shrink-0">{{ $notif->created_at->diffForHumans(null, true) }}</span>
+                  </div>
+                  <p class="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-2 mt-0.5">{{ $notif->message }}</p>
+                </a>
+              @empty
+                <div class="px-4 py-6 text-center text-slate-400 text-xs">
+                  <i class="fa-regular fa-bell-slash text-base mb-1 block opacity-50"></i>
+                  No new notifications.
+                </div>
+              @endforelse
+            </div>
+
+            <div class="px-4 pt-2 pb-1 border-t border-slate-100 dark:border-brand-slate/40 text-center">
+              <a href="{{ route('admin.notifications.index') }}" class="text-[11px] text-brand-accent hover:underline font-semibold flex items-center justify-center gap-1">
+                <span>View All Notifications</span>
+                <i class="fa-solid fa-arrow-right text-[9px]"></i>
+              </a>
             </div>
           </div>
         </div>
@@ -427,7 +487,8 @@
       { title: 'Domain TLD Pricing', subtitle: 'Configure domain extension prices, renewals and offer badges', url: '{{ route('admin.domains.index') }}', category: 'Management', icon: 'fa-solid fa-globe' },
       { title: 'Core Features & Specs', subtitle: 'Update infrastructure features, hardware specs and turbo badges', url: '{{ route('admin.features.index') }}', category: 'Management', icon: 'fa-solid fa-bolt' },
       { title: 'Client Reviews & Testimonials', subtitle: 'Manage client feedback, ratings, companies and display status', url: '{{ route('admin.testimonials.index') }}', category: 'Management', icon: 'fa-solid fa-comments' },
-      { title: 'FAQ Accordion Manager', subtitle: 'Add, update and reorder questions and answers on homepage', url: '{{ route('admin.faqs.index') }}', category: 'Management', icon: 'fa-solid fa-circle-question' },
+      { title: 'Support Inquiries & Tickets', subtitle: 'View client contact submissions, problem descriptions & screenshots', url: '{{ route('admin.contacts.index') }}', category: 'Support', icon: 'fa-solid fa-headset' },
+      { title: 'System & Admin Notifications', subtitle: 'Event alerts, contact inquiries & unread system notices', url: '{{ route('admin.notifications.index') }}', category: 'Support', icon: 'fa-solid fa-bell' },
       { title: 'Visitors & Analytics', subtitle: 'Real-time IP, ISP, country, device, screen resolution & charts', url: '{{ route('admin.visitors.index') }}', category: 'Analytics', icon: 'fa-solid fa-chart-line' },
       { title: 'Admin Profile & Security', subtitle: 'Change name, email, contact phone, avatar & password', url: '{{ route('admin.profile.edit') }}', category: 'Account', icon: 'fa-solid fa-user-gear' },
     ];

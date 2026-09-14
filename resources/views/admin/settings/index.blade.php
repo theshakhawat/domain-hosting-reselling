@@ -52,7 +52,7 @@
     </button>
   </div>
 
-  <form action="{{ route('admin.settings.update') }}" method="POST" class="space-y-6">
+  <form action="{{ route('admin.settings.update') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
     @csrf
     <input type="hidden" name="has_section_toggles" value="1">
 
@@ -406,7 +406,7 @@
             <span>Hero Section & Brand Identity</span>
           </h2>
           <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
-            Control the website brand name, primary hero headline, value proposition copy, and badges.
+            Control the website brand name, primary hero headline, value proposition copy, hero image graphic, and datacenter stats.
           </p>
         </div>
 
@@ -443,6 +443,120 @@
           <textarea name="hero_description" rows="3"
             class="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 dark:border-brand-slate/60 bg-slate-50 dark:bg-brand-dark text-slate-900 dark:text-white focus:outline-none focus:border-brand-accent">{{ old('hero_description', $settings['hero_description'] ?? 'Engineered cloud hosting for modern web applications, agencies, and businesses. NVMe Gen-4 storage, automated failover, and sub-millisecond database queries.') }}</textarea>
         </div>
+
+        <!-- Hero Server Graphic & Image Uploader Section -->
+        <div class="pt-6 border-t border-slate-100 dark:border-brand-slate/30 space-y-4">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="text-xs font-mono font-bold uppercase tracking-wider text-slate-900 dark:text-white flex items-center gap-2">
+                <i class="fa-solid fa-image text-brand-accent"></i>
+                <span>Hero Section Server Graphic & Console Image</span>
+              </h3>
+              <p class="text-[11px] text-slate-400 mt-0.5">Upload a custom datacenter image from your device or specify an image URL.</p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            
+            <!-- Left: Upload / URL inputs (8 cols) -->
+            <div class="lg:col-span-8 space-y-4">
+              <!-- Upload Image Input -->
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                  Upload Datacenter Server Image (PNG, JPG, WEBP, SVG)
+                </label>
+                <div class="flex flex-wrap items-center gap-3">
+                  <label class="cursor-pointer inline-flex items-center gap-2 px-3.5 py-2 rounded-lg border border-dashed border-slate-300 dark:border-brand-slate/60 bg-slate-50 dark:bg-brand-dark text-slate-600 dark:text-slate-300 hover:border-brand-accent hover:text-brand-accent transition-colors text-xs">
+                    <i class="fa-solid fa-cloud-arrow-up text-brand-accent"></i>
+                    <span id="heroImageFileLabel">Choose Image File (Max 5MB)</span>
+                    <input type="file" name="hero_image_file" id="heroImageInput" accept="image/*" class="hidden" onchange="previewHeroUpload(this)">
+                  </label>
+                  @if(!empty($settings['hero_image']))
+                    <label class="inline-flex items-center gap-1.5 text-xs text-rose-500 hover:underline cursor-pointer">
+                      <input type="checkbox" name="remove_hero_image" value="1" class="w-3.5 h-3.5 rounded text-rose-500">
+                      <span>Remove uploaded image (Reset to default)</span>
+                    </label>
+                  @endif
+                </div>
+              </div>
+
+              <!-- OR Image URL Fallback -->
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                  OR Image Web URL (External Link)
+                </label>
+                <input type="text" name="hero_image_url" id="heroImageUrlInput" oninput="previewHeroUrl(this.value)" value="{{ old('hero_image_url', $settings['hero_image_url'] ?? '') }}" placeholder="https://images.unsplash.com/... or https://yourdomain.com/hero.jpg"
+                  class="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 dark:border-brand-slate/60 bg-slate-50 dark:bg-brand-dark text-slate-900 dark:text-white focus:outline-none focus:border-brand-accent">
+                <p class="text-[10px] text-slate-400 mt-1">If a file is uploaded above, the uploaded file takes priority over the URL.</p>
+              </div>
+
+              <!-- Console Header Text -->
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                  Server Console Tag / Title
+                </label>
+                <input type="text" name="hero_cluster_name" value="{{ old('hero_cluster_name', $settings['hero_cluster_name'] ?? 'nexus-cluster-01.bd') }}"
+                  class="w-full px-3 py-2 text-xs font-mono rounded-lg border border-slate-300 dark:border-brand-slate/60 bg-slate-50 dark:bg-brand-dark text-slate-900 dark:text-white focus:outline-none focus:border-brand-accent">
+              </div>
+            </div>
+
+            <!-- Right: Current Image Preview Thumbnail (4 cols) -->
+            <div class="lg:col-span-4 p-3 rounded-xl border border-slate-200 dark:border-brand-slate/50 bg-slate-50 dark:bg-brand-dark/40 text-center">
+              <span class="text-[10px] font-mono text-slate-400 uppercase block mb-1.5 font-semibold">Live Preview</span>
+              <div class="rounded-lg overflow-hidden border border-slate-200 dark:border-brand-slate/60 bg-slate-900 relative aspect-video flex items-center justify-center">
+                @php
+                  $currentHeroSrc = 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=800&q=80';
+                  if (!empty($settings['hero_image']) && file_exists(public_path($settings['hero_image']))) {
+                      $currentHeroSrc = asset($settings['hero_image']);
+                  } elseif (!empty($settings['hero_image_url'])) {
+                      $currentHeroSrc = $settings['hero_image_url'];
+                  }
+                @endphp
+                <img id="heroImagePreview" src="{{ $currentHeroSrc }}" alt="Hero Image Preview" class="w-full h-full object-cover">
+              </div>
+              <p class="text-[10px] text-slate-400 mt-1.5 font-mono">Hero preview frame</p>
+            </div>
+
+          </div>
+
+          <!-- Hero Server Overlay Badges (3 stats) -->
+          <div class="pt-4 border-t border-slate-100 dark:border-brand-slate/30">
+            <h4 class="text-xs font-bold text-slate-800 dark:text-slate-200 mb-2.5 flex items-center gap-1.5">
+              <i class="fa-solid fa-chart-simple text-cyan-500"></i>
+              <span>Console Bottom Live Stat Badges</span>
+            </h4>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+              <!-- Stat 1 -->
+              <div class="p-3 rounded-lg border border-slate-200 dark:border-brand-slate/40 bg-slate-50/50 dark:bg-brand-dark/30 space-y-1.5">
+                <span class="text-[10px] font-mono text-slate-400 uppercase font-bold">Stat Badge 1 (Left)</span>
+                <input type="text" name="hero_stat_1_label" value="{{ old('hero_stat_1_label', $settings['hero_stat_1_label'] ?? 'Throughput') }}" placeholder="Label (e.g. Throughput)"
+                  class="w-full px-2 py-1 text-xs rounded border border-slate-300 dark:border-brand-slate/60 bg-white dark:bg-brand-card text-slate-900 dark:text-white">
+                <input type="text" name="hero_stat_1_value" value="{{ old('hero_stat_1_value', $settings['hero_stat_1_value'] ?? '7,450 MB/s') }}" placeholder="Value (e.g. 7,450 MB/s)"
+                  class="w-full px-2 py-1 text-xs font-bold rounded border border-slate-300 dark:border-brand-slate/60 bg-white dark:bg-brand-card text-slate-900 dark:text-white">
+              </div>
+
+              <!-- Stat 2 -->
+              <div class="p-3 rounded-lg border border-slate-200 dark:border-brand-slate/40 bg-slate-50/50 dark:bg-brand-dark/30 space-y-1.5">
+                <span class="text-[10px] font-mono text-cyan-500 uppercase font-bold">Stat Badge 2 (Center)</span>
+                <input type="text" name="hero_stat_2_label" value="{{ old('hero_stat_2_label', $settings['hero_stat_2_label'] ?? 'Dhaka BDIX') }}" placeholder="Label (e.g. Dhaka BDIX)"
+                  class="w-full px-2 py-1 text-xs rounded border border-slate-300 dark:border-brand-slate/60 bg-white dark:bg-brand-card text-slate-900 dark:text-white">
+                <input type="text" name="hero_stat_2_value" value="{{ old('hero_stat_2_value', $settings['hero_stat_2_value'] ?? '8ms Ping') }}" placeholder="Value (e.g. 8ms Ping)"
+                  class="w-full px-2 py-1 text-xs font-bold text-cyan-500 rounded border border-slate-300 dark:border-brand-slate/60 bg-white dark:bg-brand-card">
+              </div>
+
+              <!-- Stat 3 -->
+              <div class="p-3 rounded-lg border border-slate-200 dark:border-brand-slate/40 bg-slate-50/50 dark:bg-brand-dark/30 space-y-1.5">
+                <span class="text-[10px] font-mono text-emerald-500 uppercase font-bold">Stat Badge 3 (Right)</span>
+                <input type="text" name="hero_stat_3_label" value="{{ old('hero_stat_3_label', $settings['hero_stat_3_label'] ?? 'Load') }}" placeholder="Label (e.g. Load)"
+                  class="w-full px-2 py-1 text-xs rounded border border-slate-300 dark:border-brand-slate/60 bg-white dark:bg-brand-card text-slate-900 dark:text-white">
+                <input type="text" name="hero_stat_3_value" value="{{ old('hero_stat_3_value', $settings['hero_stat_3_value'] ?? '14.2%') }}" placeholder="Value (e.g. 14.2%)"
+                  class="w-full px-2 py-1 text-xs font-bold text-emerald-500 rounded border border-slate-300 dark:border-brand-slate/60 bg-white dark:bg-brand-card">
+              </div>
+            </div>
+          </div>
+
+        </div>
+
       </div>
     </div>
 
@@ -729,6 +843,29 @@
     try {
       localStorage.setItem('admin_active_settings_tab', targetTabId);
     } catch(e) {}
+  }
+
+  function previewHeroUpload(input) {
+    const file = input.files[0];
+    const label = document.getElementById('heroImageFileLabel');
+    const preview = document.getElementById('heroImagePreview');
+    if (file) {
+      label.textContent = file.name;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        if (preview) {
+          preview.src = e.target.result;
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  function previewHeroUrl(url) {
+    const preview = document.getElementById('heroImagePreview');
+    if (preview && url.trim() !== '') {
+      preview.src = url.trim();
+    }
   }
 
   // Restore saved tab on load

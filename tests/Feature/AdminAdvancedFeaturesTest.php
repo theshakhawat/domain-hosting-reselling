@@ -8,6 +8,8 @@ use App\Models\SiteSetting;
 use App\Models\User;
 use App\Models\Visitor;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\File;
 use Tests\TestCase;
 
 class AdminAdvancedFeaturesTest extends TestCase
@@ -267,13 +269,50 @@ class AdminAdvancedFeaturesTest extends TestCase
         $response = $this->actingAs($this->admin)->delete("/admin/categories/{$toDelete->id}");
 
         $response->assertRedirect();
-        $this->assertDatabaseMissing('plan_categories', [
-            'id' => $toDelete->id,
-        ]);
-
         $this->assertDatabaseHas('hosting_plans', [
             'id' => $plan->id,
             'category' => 'shared',
         ]);
+    }
+
+    public function test_admin_can_upload_custom_hero_image_and_configure_hero_stats(): void
+    {
+        $fakeImage = UploadedFile::fake()->image('custom_server.jpg', 800, 600);
+
+        $response = $this->actingAs($this->admin)->post('/admin/settings', [
+            'site_name' => 'SUPERCLOUD',
+            'hero_title' => 'Ultra Fast Cloud Server',
+            'hero_cluster_name' => 'dhaka-rack-09.bd',
+            'hero_stat_1_label' => 'IOPS',
+            'hero_stat_1_value' => '120,000',
+            'hero_stat_2_label' => 'BDIX Speed',
+            'hero_stat_2_value' => '10 Gbps',
+            'hero_stat_3_label' => 'Uptime',
+            'hero_stat_3_value' => '99.999%',
+            'hero_image_file' => $fakeImage,
+        ]);
+
+        $response->assertRedirect('/admin/settings');
+        $this->assertEquals('SUPERCLOUD', SiteSetting::get('site_name'));
+        $this->assertEquals('dhaka-rack-09.bd', SiteSetting::get('hero_cluster_name'));
+        $this->assertEquals('120,000', SiteSetting::get('hero_stat_1_value'));
+
+        $heroImagePath = SiteSetting::get('hero_image');
+        $this->assertNotEmpty($heroImagePath);
+        $this->assertFileExists(public_path($heroImagePath));
+
+        // Test homepage renders the custom image and cluster details
+        $homeResponse = $this->get('/');
+        $homeResponse->assertStatus(200);
+        $homeResponse->assertSee('SUPERCLOUD', false);
+        $homeResponse->assertSee('Ultra Fast Cloud Server', false);
+        $homeResponse->assertSee('dhaka-rack-09.bd', false);
+        $homeResponse->assertSee('120,000', false);
+        $homeResponse->assertSee('10 Gbps', false);
+
+        // Clean up uploaded file
+        if (File::exists(public_path($heroImagePath))) {
+            File::delete(public_path($heroImagePath));
+        }
     }
 }

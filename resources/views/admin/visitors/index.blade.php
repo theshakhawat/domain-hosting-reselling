@@ -28,6 +28,16 @@
           <span>Sync & Refresh Data</span>
         </button>
       </form>
+      @if($visitors->total() > 0)
+        <form action="{{ route('admin.visitors.clear') }}" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete ALL visitor traffic logs? This action cannot be undone.');">
+          @csrf
+          @method('DELETE')
+          <button type="submit" class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg border border-rose-200 dark:border-rose-900/50 bg-rose-50 dark:bg-rose-950/40 text-xs font-semibold text-rose-600 dark:text-rose-400 hover:bg-rose-100 dark:hover:bg-rose-900/60 transition-colors">
+            <i class="fa-solid fa-trash-can text-xs"></i>
+            <span>Clear All Logs</span>
+          </button>
+        </form>
+      @endif
     </div>
   </div>
 
@@ -226,6 +236,7 @@
             <th class="px-4 py-3">Visited Route</th>
             <th class="px-4 py-3 text-center">Hits</th>
             <th class="px-4 py-3 text-right">Last Activity</th>
+            <th class="px-4 py-3 text-center">Action</th>
           </tr>
         </thead>
         <tbody class="divide-y divide-slate-100 dark:divide-brand-slate/20">
@@ -302,10 +313,21 @@
                 </div>
               </td>
 
+              <!-- Action -->
+              <td class="px-4 py-3 text-center">
+                <form action="{{ route('admin.visitors.destroy', $v) }}" method="POST" class="inline" onsubmit="return confirm('Delete this visitor entry?');">
+                  @csrf
+                  @method('DELETE')
+                  <button type="submit" class="p-1.5 rounded-lg text-slate-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors" title="Delete record">
+                    <i class="fa-solid fa-trash-can text-xs"></i>
+                  </button>
+                </form>
+              </td>
+
             </tr>
           @empty
             <tr>
-              <td colspan="7" class="px-4 py-8 text-center text-slate-400">
+              <td colspan="8" class="px-4 py-8 text-center text-slate-400">
                 <div class="flex flex-col items-center justify-center">
                   <i class="fa-solid fa-users-slash text-2xl text-slate-300 dark:text-slate-600 mb-2"></i>
                   <span>No visitor records match your filter criteria.</span>

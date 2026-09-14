@@ -2,9 +2,11 @@
 
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\ContactMessageController;
 use App\Http\Controllers\Admin\DomainController;
 use App\Http\Controllers\Admin\FaqController;
 use App\Http\Controllers\Admin\FeatureController;
+use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\Admin\PlanController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\ReviewController;
@@ -12,11 +14,14 @@ use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\SystemController;
 use App\Http\Controllers\Admin\VisitorController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 
 // Public Website
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/contact', [ContactController::class, 'showForm'])->name('contact.show');
+Route::post('/contact', [ContactController::class, 'submit'])->name('contact.submit');
 
 // Admin Authentication
 Route::get('/admin/login', [AuthController::class, 'showLoginForm'])->name('admin.login');
@@ -30,7 +35,6 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
     Route::get('/', [AdminController::class, 'dashboard']);
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
 
-    // Hosting Plans
     // Hosting Plans & Custom Categories
     Route::get('/plans', [PlanController::class, 'index'])->name('plans.index');
     Route::get('/plans/create', [PlanController::class, 'create'])->name('plans.create');
@@ -71,6 +75,19 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
     Route::delete('/faqs/{faq}', [FaqController::class, 'destroy'])->name('faqs.destroy');
     Route::patch('/faqs/{faq}/toggle', [FaqController::class, 'toggleStatus'])->name('faqs.toggle');
 
+    // Contact Inquiries / Support Tickets
+    Route::get('/contacts', [ContactMessageController::class, 'index'])->name('contacts.index');
+    Route::get('/contacts/{contact}', [ContactMessageController::class, 'show'])->name('contacts.show');
+    Route::patch('/contacts/{contact}/status', [ContactMessageController::class, 'updateStatus'])->name('contacts.status');
+    Route::delete('/contacts/{contact}', [ContactMessageController::class, 'destroy'])->name('contacts.destroy');
+
+    // Admin Notifications
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+    Route::match(['GET', 'PATCH', 'POST'], '/notifications/{notification}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
+    Route::post('/notifications/mark-all-read', [NotificationController::class, 'markAllRead'])->name('notifications.mark-all-read');
+    Route::delete('/notifications/{notification}', [NotificationController::class, 'destroy'])->name('notifications.destroy');
+    Route::delete('/notifications-clear-all', [NotificationController::class, 'clearAll'])->name('notifications.clear');
+
     // Site & Promo Settings
     Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
     Route::post('/settings', [SettingController::class, 'update'])->name('settings.update');
@@ -80,6 +97,8 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
 
     // Visitor Tracking & Analytics
     Route::get('/visitors', [VisitorController::class, 'index'])->name('visitors.index');
+    Route::delete('/visitors/{visitor}', [VisitorController::class, 'destroy'])->name('visitors.destroy');
+    Route::delete('/visitors-clear-all', [VisitorController::class, 'clearAll'])->name('visitors.clear');
 
     // Admin Profile & Security
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

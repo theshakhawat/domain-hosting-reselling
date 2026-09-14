@@ -7,6 +7,8 @@ use App\Models\SiteSetting;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 class SettingController extends Controller
@@ -32,6 +34,15 @@ class SettingController extends Controller
             'hero_pill' => ['nullable', 'string', 'max:255'],
             'hero_title' => ['nullable', 'string', 'max:255'],
             'hero_description' => ['nullable', 'string'],
+            'hero_image_file' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp,svg,gif', 'max:5120'],
+            'hero_image_url' => ['nullable', 'string', 'max:500'],
+            'hero_cluster_name' => ['nullable', 'string', 'max:100'],
+            'hero_stat_1_label' => ['nullable', 'string', 'max:50'],
+            'hero_stat_1_value' => ['nullable', 'string', 'max:50'],
+            'hero_stat_2_label' => ['nullable', 'string', 'max:50'],
+            'hero_stat_2_value' => ['nullable', 'string', 'max:50'],
+            'hero_stat_3_label' => ['nullable', 'string', 'max:50'],
+            'hero_stat_3_value' => ['nullable', 'string', 'max:50'],
             'status_text' => ['nullable', 'string', 'max:255'],
 
             // Header Settings
@@ -80,6 +91,31 @@ class SettingController extends Controller
             'why_choose_6_desc' => ['nullable', 'string', 'max:255'],
         ]);
 
+        // Handle Hero Image Upload
+        if ($request->hasFile('hero_image_file')) {
+            $file = $request->file('hero_image_file');
+            $filename = 'hero_'.time().'_'.Str::random(6).'.'.$file->getClientOriginalExtension();
+            $dest = public_path('uploads/hero');
+
+            if (! File::isDirectory($dest)) {
+                File::makeDirectory($dest, 0755, true, true);
+            }
+
+            $oldImg = SiteSetting::get('hero_image');
+            if ($oldImg && File::exists(public_path($oldImg))) {
+                File::delete(public_path($oldImg));
+            }
+
+            $file->move($dest, $filename);
+            SiteSetting::set('hero_image', 'uploads/hero/'.$filename);
+        } elseif ($request->input('remove_hero_image') === '1') {
+            $oldImg = SiteSetting::get('hero_image');
+            if ($oldImg && File::exists(public_path($oldImg))) {
+                File::delete(public_path($oldImg));
+            }
+            SiteSetting::set('hero_image', '');
+        }
+
         // Section toggles list
         $sectionToggles = [
             'header_announcement_enabled',
@@ -102,6 +138,8 @@ class SettingController extends Controller
             }
         }
 
+        unset($validated['hero_image_file']);
+
         foreach ($validated as $key => $value) {
             SiteSetting::set($key, (string) ($value ?? ''));
         }
@@ -109,6 +147,6 @@ class SettingController extends Controller
         Cache::forget('homepage_data');
 
         return redirect()->route('admin.settings.index')
-            ->with('success', 'Site settings and section visibility updated successfully.');
+            ->with('success', 'Site settings, hero image, and configurations updated successfully.');
     }
 }

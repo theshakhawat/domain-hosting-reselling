@@ -20,6 +20,10 @@ class TrackVisitor
         $response = $next($request);
 
         // Skip non-GET requests or asset/api routes from bloating logs
+        if (! $request->isMethod('GET')) {
+            return $response;
+        }
+
         $path = $request->path();
         if (
             $request->is('api/*') ||

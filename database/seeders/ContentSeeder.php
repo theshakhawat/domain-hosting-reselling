@@ -9,7 +9,6 @@ use App\Models\HostingPlan;
 use App\Models\PlanCategory;
 use App\Models\SiteSetting;
 use App\Models\Testimonial;
-use App\Models\Visitor;
 use Illuminate\Database\Seeder;
 
 class ContentSeeder extends Seeder
