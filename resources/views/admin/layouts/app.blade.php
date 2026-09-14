@@ -420,6 +420,7 @@
       { title: 'Header Settings', subtitle: 'Announcement bar, support phone/email, header CTA button', url: '{{ route('admin.settings.index') }}#header', category: 'Settings', icon: 'fa-solid fa-heading' },
       { title: 'Section Visibility Manager', subtitle: 'Activate or deactivate any of the 10 homepage sections', url: '{{ route('admin.settings.index') }}#sections', category: 'Settings', icon: 'fa-solid fa-toggle-on' },
       { title: 'Site Branding & Hero', subtitle: 'Site name, hero headline, subtitle, service status indicator', url: '{{ route('admin.settings.index') }}#general', category: 'Settings', icon: 'fa-solid fa-wand-magic-sparkles' },
+      { title: 'Why Choose Us / Infrastructure', subtitle: 'Headline, datacenter image, badges, and 6 benefit cards', url: '{{ route('admin.settings.index') }}#whyus', category: 'Settings', icon: 'fa-solid fa-server' },
       { title: 'Promo & Launch Bundle', subtitle: 'Coupon code, discount %, promotional banner & bundle pack', url: '{{ route('admin.settings.index') }}#promo', category: 'Settings', icon: 'fa-solid fa-tag' },
       { title: 'Hosting Plans', subtitle: 'Manage Shared, Cloud, VPS & BDIX packages, specs & pricing', url: '{{ route('admin.plans.index') }}', category: 'Management', icon: 'fa-solid fa-microchip' },
       { title: 'Add New Hosting Plan', subtitle: 'Create a new hosting package with pricing and features', url: '{{ route('admin.plans.create') }}', category: 'Management', icon: 'fa-solid fa-plus-circle' },

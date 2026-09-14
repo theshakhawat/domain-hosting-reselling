@@ -297,14 +297,14 @@ class ContentSeeder extends Seeder
 
         // 3. Seed Features
         $features = [
-            ['title' => 'LiteSpeed Enterprise', 'icon' => 'fa-bolt', 'description' => 'Native event-driven server handling 10,000+ simultaneous visitors with sub-80ms TTFB.', 'badge' => 'TURBO', 'is_highlight' => true, 'is_active' => true, 'sort_order' => 1],
-            ['title' => 'NVMe Gen-4 Array', 'icon' => 'fa-microchip', 'description' => 'PCIe 4.0 solid-state drives delivering 7,450 MB/s for instantaneous database lookups.', 'badge' => 'PCIe 4.0', 'is_highlight' => false, 'is_active' => true, 'sort_order' => 2],
-            ['title' => 'Free Wildcard SSL', 'icon' => 'fa-lock', 'description' => 'Automated 256-bit certificates for all domains and subdomains with silent auto-renewal.', 'badge' => 'Auto-Renew', 'is_highlight' => false, 'is_active' => true, 'sort_order' => 3],
-            ['title' => 'Daily Acronis Backups', 'icon' => 'fa-clock-rotate-left', 'description' => 'Automated off-site cloud snapshots taken every 24 hours with 1-click snapshot restore.', 'badge' => '30 Days', 'is_highlight' => false, 'is_active' => true, 'sort_order' => 4],
-            ['title' => 'Imunify360 Defense', 'icon' => 'fa-shield-halved', 'description' => 'Machine-learning firewall defusing malware, brute-force attacks and zero-day exploits.', 'badge' => 'AI WAF', 'is_highlight' => false, 'is_active' => true, 'sort_order' => 5],
-            ['title' => 'Free Migration', 'icon' => 'fa-truck-fast', 'description' => 'Our senior migration team transfers your websites and email inboxes with zero downtime.', 'badge' => 'Zero Downtime', 'is_highlight' => false, 'is_active' => true, 'sort_order' => 6],
-            ['title' => '99.99% Uptime SLA', 'icon' => 'fa-satellite-dish', 'description' => 'Redundant N+2 power, multi-homed BGP fiber, backed by our financial guarantee.', 'badge' => 'SLA Backed', 'is_highlight' => false, 'is_active' => true, 'sort_order' => 7],
-            ['title' => '24/7 Expert Support', 'icon' => 'fa-headset', 'description' => 'Direct chat with certified Linux system administrators in under 90 seconds.', 'badge' => '<90s Response', 'is_highlight' => false, 'is_active' => true, 'sort_order' => 8],
+            ['title' => 'LiteSpeed Enterprise', 'icon' => 'fa-solid fa-bolt', 'description' => 'Native event-driven server handling 10,000+ simultaneous visitors with sub-80ms TTFB.', 'badge' => 'TURBO', 'is_highlight' => true, 'is_active' => true, 'sort_order' => 1],
+            ['title' => 'NVMe Gen-4 Array', 'icon' => 'fa-solid fa-microchip', 'description' => 'PCIe 4.0 solid-state drives delivering 7,450 MB/s for instantaneous database lookups.', 'badge' => 'PCIe 4.0', 'is_highlight' => false, 'is_active' => true, 'sort_order' => 2],
+            ['title' => 'Free Wildcard SSL', 'icon' => 'fa-solid fa-lock', 'description' => 'Automated 256-bit certificates for all domains and subdomains with silent auto-renewal.', 'badge' => 'Auto-Renew', 'is_highlight' => false, 'is_active' => true, 'sort_order' => 3],
+            ['title' => 'Daily Acronis Backups', 'icon' => 'fa-solid fa-clock-rotate-left', 'description' => 'Automated off-site cloud snapshots taken every 24 hours with 1-click snapshot restore.', 'badge' => '30 Days', 'is_highlight' => false, 'is_active' => true, 'sort_order' => 4],
+            ['title' => 'Imunify360 Defense', 'icon' => 'fa-solid fa-shield-halved', 'description' => 'Machine-learning firewall defusing malware, brute-force attacks and zero-day exploits.', 'badge' => 'AI WAF', 'is_highlight' => false, 'is_active' => true, 'sort_order' => 5],
+            ['title' => 'Free Migration', 'icon' => 'fa-solid fa-truck-fast', 'description' => 'Our senior migration team transfers your websites and email inboxes with zero downtime.', 'badge' => 'Zero Downtime', 'is_highlight' => false, 'is_active' => true, 'sort_order' => 6],
+            ['title' => '99.99% Uptime SLA', 'icon' => 'fa-solid fa-satellite-dish', 'description' => 'Redundant N+2 power, multi-homed BGP fiber, backed by our financial guarantee.', 'badge' => 'SLA Backed', 'is_highlight' => false, 'is_active' => true, 'sort_order' => 7],
+            ['title' => '24/7 Expert Support', 'icon' => 'fa-solid fa-headset', 'description' => 'Direct chat with certified Linux system administrators in under 90 seconds.', 'badge' => '<90s Response', 'is_highlight' => false, 'is_active' => true, 'sort_order' => 8],
         ];
 
         foreach ($features as $f) {
@@ -351,8 +351,6 @@ class ContentSeeder extends Seeder
 
         // 5. Seed FAQs
         $faqs = [
-            ['question' => 'What is web hosting?', 'answer' => 'Web hosting allocates physical storage, CPU processing power, and bandwidth on an Internet-connected server so your website can be accessed 24/7. NEXUSHOST provides managed hosting equipped with enterprise Gen-4 NVMe drives and LiteSpeed web servers.', 'is_active' => true, 'sort_order' => 1],
-            ['question' => 'Which hosting plan should I choose?', 'answer' => 'For personal sites or blogs, select Shared Starter or Business. For busy e-commerce or high-traffic apps, choose Cloud Hosting. For visitors inside Bangladesh, our BDIX Hosting gives sub-10ms latency.', 'is_active' => true, 'sort_order' => 2],
             ['question' => 'Can I upgrade later?', 'answer' => 'Yes, upgrades are seamless with zero downtime. All files, databases, and mail accounts remain intact.', 'is_active' => true, 'sort_order' => 3],
             ['question' => 'Do you provide free SSL?', 'answer' => 'Yes, free 256-bit Let\'s Encrypt Wildcard SSL certificates are automatically installed and renewed for all domains and subdomains.', 'is_active' => true, 'sort_order' => 4],
             ['question' => 'Do you provide free migration?', 'answer' => 'Yes, our technical team migrates your website, databases, and emails from your existing host completely free with guaranteed zero downtime.', 'is_active' => true, 'sort_order' => 5],
@@ -419,104 +417,5 @@ class ContentSeeder extends Seeder
             SiteSetting::set($key, $val);
         }
 
-        // 7. Seed Sample Visitors if empty
-        if (Visitor::count() === 0) {
-            $sampleVisitors = [
-                [
-                    'ip_address' => '103.114.98.22',
-                    'session_id' => 'sess_demo_01',
-                    'country' => 'Bangladesh',
-                    'country_code' => 'BD',
-                    'city' => 'Dhaka',
-                    'isp' => 'Link3 Technologies Ltd',
-                    'device_type' => 'Desktop',
-                    'operating_system' => 'Windows 10/11',
-                    'browser' => 'Google Chrome',
-                    'screen_resolution' => '1920x1080',
-                    'visited_route' => '/',
-                    'method' => 'GET',
-                    'referrer' => 'https://google.com',
-                    'hits' => 14,
-                    'last_activity_at' => now()->subMinutes(3),
-                    'created_at' => now()->subMinutes(25),
-                ],
-                [
-                    'ip_address' => '103.230.104.15',
-                    'session_id' => 'sess_demo_02',
-                    'country' => 'Bangladesh',
-                    'country_code' => 'BD',
-                    'city' => 'Chittagong',
-                    'isp' => 'AmberIT Broadband',
-                    'device_type' => 'Mobile',
-                    'operating_system' => 'Android',
-                    'browser' => 'Google Chrome',
-                    'screen_resolution' => '390x844',
-                    'visited_route' => '/#hosting-plans',
-                    'method' => 'GET',
-                    'referrer' => 'https://facebook.com',
-                    'hits' => 8,
-                    'last_activity_at' => now()->subMinutes(12),
-                    'created_at' => now()->subMinutes(40),
-                ],
-                [
-                    'ip_address' => '119.30.38.4',
-                    'session_id' => 'sess_demo_03',
-                    'country' => 'Bangladesh',
-                    'country_code' => 'BD',
-                    'city' => 'Sylhet',
-                    'isp' => 'Grameenphone 4G LTE',
-                    'device_type' => 'Mobile',
-                    'operating_system' => 'iOS',
-                    'browser' => 'Apple Safari',
-                    'screen_resolution' => '430x932',
-                    'visited_route' => '/#domain-search',
-                    'method' => 'GET',
-                    'referrer' => null,
-                    'hits' => 5,
-                    'last_activity_at' => now()->subMinutes(28),
-                    'created_at' => now()->subHours(1),
-                ],
-                [
-                    'ip_address' => '185.190.140.8',
-                    'session_id' => 'sess_demo_04',
-                    'country' => 'Singapore',
-                    'country_code' => 'SG',
-                    'city' => 'Singapore',
-                    'isp' => 'Singtel Fiber Broadband',
-                    'device_type' => 'Desktop',
-                    'operating_system' => 'macOS',
-                    'browser' => 'Apple Safari',
-                    'screen_resolution' => '2560x1440',
-                    'visited_route' => '/',
-                    'method' => 'GET',
-                    'referrer' => 'https://linkedin.com',
-                    'hits' => 22,
-                    'last_activity_at' => now()->subMinutes(55),
-                    'created_at' => now()->subHours(2),
-                ],
-                [
-                    'ip_address' => '142.250.190.46',
-                    'session_id' => 'sess_demo_05',
-                    'country' => 'United States',
-                    'country_code' => 'US',
-                    'city' => 'New York',
-                    'isp' => 'Verizon Fios',
-                    'device_type' => 'Tablet',
-                    'operating_system' => 'iOS',
-                    'browser' => 'Apple Safari',
-                    'screen_resolution' => '820x1180',
-                    'visited_route' => '/admin/login',
-                    'method' => 'GET',
-                    'referrer' => null,
-                    'hits' => 2,
-                    'last_activity_at' => now()->subHours(3),
-                    'created_at' => now()->subHours(4),
-                ],
-            ];
-
-            foreach ($sampleVisitors as $sv) {
-                Visitor::create($sv);
-            }
-        }
     }
 }

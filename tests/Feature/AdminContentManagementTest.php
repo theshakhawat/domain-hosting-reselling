@@ -9,6 +9,7 @@ use App\Models\HostingPlan;
 use App\Models\SiteSetting;
 use App\Models\Testimonial;
 use App\Models\User;
+use App\Models\Visitor;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -31,10 +32,27 @@ class AdminContentManagementTest extends TestCase
 
     public function test_admin_can_view_dashboard(): void
     {
+        Visitor::create([
+            'ip_address' => '103.100.20.5',
+            'country' => 'Bangladesh',
+            'country_code' => 'BD',
+            'city' => 'Dhaka',
+            'device_type' => 'Desktop',
+            'operating_system' => 'Windows 11',
+            'browser' => 'Chrome',
+            'visited_route' => '/',
+            'hits' => 5,
+            'last_activity_at' => now(),
+        ]);
+
         $response = $this->actingAs($this->admin)->get('/admin');
 
         $response->assertStatus(200);
         $response->assertSee('Admin Control');
+        $response->assertSee('Traffic Trend (Last 7 Days)');
+        $response->assertSee('Latest Visitors');
+        $response->assertSee('103.100.20.5');
+        $response->assertSee('dashboardTrafficChart');
     }
 
     public function test_admin_can_view_plans_index_page(): void
@@ -182,5 +200,29 @@ class AdminContentManagementTest extends TestCase
         $response->assertSee('Outstanding speed and uptime.');
         $response->assertSee('What is web hosting?');
         $response->assertSee('Build Faster. Host Smarter.');
+    }
+
+    public function test_admin_can_update_why_choose_us_settings_and_renders_on_homepage(): void
+    {
+        $response = $this->actingAs($this->admin)->post('/admin/settings', [
+            'why_choose_title' => 'Why Fortune 500 Companies Choose NEXUSHOST',
+            'why_choose_subtitle' => 'Unrivaled infrastructure with millisecond latency worldwide.',
+            'why_choose_badge_1' => '99.999% SLA Verified',
+            'why_choose_badge_2' => 'Zero Downtime Architecture',
+            'why_choose_1_title' => 'Ultra NVMe Gen4 Storage',
+            'why_choose_1_desc' => '7,000 MB/s read/write speeds for instant queries.',
+        ]);
+
+        $response->assertRedirect('/admin/settings');
+        $this->assertEquals('Why Fortune 500 Companies Choose NEXUSHOST', SiteSetting::get('why_choose_title'));
+        $this->assertEquals('99.999% SLA Verified', SiteSetting::get('why_choose_badge_1'));
+
+        $homeResponse = $this->get('/');
+        $homeResponse->assertStatus(200);
+        $homeResponse->assertSee('Why Fortune 500 Companies Choose NEXUSHOST');
+        $homeResponse->assertSee('Unrivaled infrastructure with millisecond latency worldwide.');
+        $homeResponse->assertSee('99.999% SLA Verified');
+        $homeResponse->assertSee('Ultra NVMe Gen4 Storage');
+        $homeResponse->assertSee('7,000 MB/s read/write speeds for instant queries.');
     }
 }

@@ -112,11 +112,14 @@
 
         <!-- Desktop Navigation Links with Clear High Contrast -->
         <nav class="hidden lg:flex items-center gap-1 text-xs font-semibold text-slate-700 dark:text-gray-200" dark:bg-dark-900 aria-label="Main Navigation">
+          @if(($settings['section_hero_enabled'] ?? '1') === '1')
           <a href="#hero" class="px-3 py-1.5 rounded-md hover:text-blue-600 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/70 transition-colors">
             Home
           </a>
+          @endif
 
           <!-- Hosting Dropdown -->
+          @if(($settings['section_plans_enabled'] ?? '1') === '1')
           <div class="relative group">
             <button type="button" class="px-3 py-1.5 rounded-md inline-flex items-center gap-1.5 hover:text-blue-600 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/70 transition-colors focus:outline-none" aria-haspopup="true">
               <span>Hosting</span>
@@ -124,27 +127,23 @@
             </button>
             <div class="absolute left-0 top-full pt-2 w-60 opacity-0 translate-y-1 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-150 ease-out z-50">
               <div class="bg-white dark:bg-[#0B1B33] border border-slate-200 dark:border-slate-800 rounded-lg shadow-xl p-1.5 space-y-0.5">
-                <a href="#hosting-plans" class="flex items-center gap-2.5 px-3 py-2 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800/80 text-xs text-slate-700 dark:text-slate-200 hover:text-blue-600 dark:hover:text-white transition-colors">
-                  <i class="fa-solid fa-layer-group text-blue-500 w-4"></i>
-                  <span>Shared Hosting</span>
-                </a>
-                <a href="#hosting-plans" class="flex items-center gap-2.5 px-3 py-2 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800/80 text-xs text-slate-700 dark:text-slate-200 hover:text-blue-600 dark:hover:text-white transition-colors">
-                  <i class="fa-solid fa-cloud text-cyan-500 w-4"></i>
-                  <span>Cloud Hosting</span>
-                </a>
-                <a href="#hosting-plans" class="flex items-center gap-2.5 px-3 py-2 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800/80 text-xs text-slate-700 dark:text-slate-200 hover:text-blue-600 dark:hover:text-white transition-colors">
-                  <i class="fa-solid fa-network-wired text-indigo-500 w-4"></i>
-                  <span>VPS Hosting</span>
-                </a>
-                <a href="#hosting-plans" class="flex items-center gap-2.5 px-3 py-2 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800/80 text-xs text-slate-700 dark:text-slate-200 hover:text-blue-600 dark:hover:text-white transition-colors">
-                  <i class="fa-solid fa-bolt text-emerald-500 w-4"></i>
-                  <span>BDIX Hosting</span>
-                </a>
+                @foreach($categories as $cat)
+                  @php
+                    $catName = is_object($cat) ? $cat->name : ($cat['name'] ?? 'Shared');
+                    $catSlug = is_object($cat) ? $cat->slug : ($cat['slug'] ?? 'shared');
+                  @endphp
+                  <a href="#hosting-plans" class="flex items-center gap-2.5 px-3 py-2 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800/80 text-xs text-slate-700 dark:text-slate-200 hover:text-blue-600 dark:hover:text-white transition-colors">
+                    <i class="fa-solid fa-layer-group text-blue-500 w-4"></i>
+                    <span>{{ $catName }}</span>
+                  </a>
+                @endforeach
               </div>
             </div>
           </div>
+          @endif
 
           <!-- Domains Dropdown -->
+          @if(($settings['section_domain_enabled'] ?? '1') === '1')
           <div class="relative group">
             <button type="button" class="px-3 py-1.5 rounded-md inline-flex items-center gap-1.5 hover:text-blue-600 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/70 transition-colors focus:outline-none" aria-haspopup="true">
               <span>Domains</span>
@@ -171,19 +170,31 @@
               </div>
             </div>
           </div>
+          @endif
 
+          @if(($settings['section_features_enabled'] ?? '1') === '1')
           <a href="#features" class="px-3 py-1.5 rounded-md hover:text-blue-600 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/70 transition-colors">
             Features
           </a>
+          @endif
+
+          @if(($settings['section_bundle_enabled'] ?? '1') === '1')
           <a href="#bundle" class="px-3 py-1.5 rounded-md hover:text-blue-600 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/70 transition-colors">
             Launch Bundle
           </a>
+          @endif
+
+          @if(($settings['section_testimonials_enabled'] ?? '1') === '1')
           <a href="#testimonials" class="px-3 py-1.5 rounded-md hover:text-blue-600 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/70 transition-colors">
             Reviews
           </a>
+          @endif
+
+          @if(($settings['section_faq_enabled'] ?? '1') === '1')
           <a href="#faq" class="px-3 py-1.5 rounded-md hover:text-blue-600 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/70 transition-colors">
             FAQ
           </a>
+          @endif
         </nav>
 
         <!-- Right Side: Dark/Light toggle + Minimal Get Started CTA (Client Area Removed) -->
@@ -238,25 +249,32 @@
 
         <!-- Drawer Links -->
         <div class="py-4 space-y-1">
+          @if(($settings['section_hero_enabled'] ?? '1') === '1')
           <a href="#hero" class="mobile-nav-link block px-3 py-2 text-sm font-semibold text-slate-800 dark:text-slate-200 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800">
             Home
           </a>
+          @endif
 
           <!-- Expandable Hosting Submenu -->
+          @if(($settings['section_plans_enabled'] ?? '1') === '1')
           <div>
             <button type="button" class="mobile-submenu-trigger w-full flex items-center justify-between px-3 py-2 text-sm font-semibold text-slate-800 dark:text-slate-200 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800 focus:outline-none" data-target="mobile-hosting-submenu">
               <span>Hosting Solutions</span>
               <i class="submenu-arrow-icon fa-solid fa-chevron-down text-[10px] transition-transform duration-200"></i>
             </button>
             <div id="mobile-hosting-submenu" class="hidden pl-4 pr-2 py-1.5 space-y-1 bg-slate-50 dark:bg-slate-900/60 rounded-md mt-1 border border-slate-200 dark:border-slate-800 text-xs">
-              <a href="#hosting-plans" class="mobile-nav-link block px-2 py-1.5 text-slate-600 dark:text-slate-300 hover:text-blue-500">Shared Hosting</a>
-              <a href="#hosting-plans" class="mobile-nav-link block px-2 py-1.5 text-slate-600 dark:text-slate-300 hover:text-cyan-500">Cloud Hosting</a>
-              <a href="#hosting-plans" class="mobile-nav-link block px-2 py-1.5 text-slate-600 dark:text-slate-300 hover:text-indigo-500">VPS Hosting</a>
-              <a href="#hosting-plans" class="mobile-nav-link block px-2 py-1.5 text-slate-600 dark:text-slate-300 hover:text-emerald-500">BDIX Hosting</a>
+              @foreach($categories as $cat)
+                @php
+                  $catName = is_object($cat) ? $cat->name : ($cat['name'] ?? 'Shared');
+                @endphp
+                <a href="#hosting-plans" class="mobile-nav-link block px-2 py-1.5 text-slate-600 dark:text-slate-300 hover:text-blue-500">{{ $catName }}</a>
+              @endforeach
             </div>
           </div>
+          @endif
 
           <!-- Expandable Domains Submenu -->
+          @if(($settings['section_domain_enabled'] ?? '1') === '1')
           <div>
             <button type="button" class="mobile-submenu-trigger w-full flex items-center justify-between px-3 py-2 text-sm font-semibold text-slate-800 dark:text-slate-200 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800 focus:outline-none" data-target="mobile-domains-submenu">
               <span>Domains</span>
@@ -268,19 +286,31 @@
               <a href="#domain-search" class="mobile-nav-link block px-2 py-1.5 text-slate-600 dark:text-slate-300 hover:text-amber-500">Domain Transfer</a>
             </div>
           </div>
+          @endif
 
+          @if(($settings['section_features_enabled'] ?? '1') === '1')
           <a href="#features" class="mobile-nav-link block px-3 py-2 text-sm font-semibold text-slate-800 dark:text-slate-200 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800">
             Features
           </a>
+          @endif
+
+          @if(($settings['section_bundle_enabled'] ?? '1') === '1')
           <a href="#bundle" class="mobile-nav-link block px-3 py-2 text-sm font-semibold text-slate-800 dark:text-slate-200 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800">
             Launch Bundle
           </a>
+          @endif
+
+          @if(($settings['section_testimonials_enabled'] ?? '1') === '1')
           <a href="#testimonials" class="mobile-nav-link block px-3 py-2 text-sm font-semibold text-slate-800 dark:text-slate-200 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800">
             Reviews
           </a>
+          @endif
+
+          @if(($settings['section_faq_enabled'] ?? '1') === '1')
           <a href="#faq" class="mobile-nav-link block px-3 py-2 text-sm font-semibold text-slate-800 dark:text-slate-200 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800">
             FAQ
           </a>
+          @endif
         </div>
       </div>
 
@@ -752,36 +782,36 @@
         <!-- Left Column: Reasons Narrative -->
         <div class="lg:col-span-6 space-y-4 text-left">
           <h2 class="text-2xl sm:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white">
-            Why builders choose NEXUSHOST.
+            {{ $settings['why_choose_title'] ?? 'Why builders choose NEXUSHOST.' }}
           </h2>
           <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
-            We reject the budget host model of cramming thousands of sites onto slow disks. Here is our architectural difference:
+            {{ $settings['why_choose_subtitle'] ?? 'We reject the budget host model of cramming thousands of sites onto slow disks. Here is our architectural difference:' }}
           </p>
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-2 text-xs">
             <div class="p-3 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-[#0B1B33]">
-              <strong class="text-slate-900 dark:text-white block font-semibold">Fast Infrastructure</strong>
-              <span class="text-slate-500">Tier-IV facilities with dual redundant feeds.</span>
+              <strong class="text-slate-900 dark:text-white block font-semibold">{{ $settings['why_choose_1_title'] ?? 'Fast Infrastructure' }}</strong>
+              <span class="text-slate-500">{{ $settings['why_choose_1_desc'] ?? 'Tier-IV facilities with dual redundant feeds.' }}</span>
             </div>
             <div class="p-3 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-[#0B1B33]">
-              <strong class="text-slate-900 dark:text-white block font-semibold">Transparent Pricing</strong>
-              <span class="text-slate-500">No surprise price spikes or hidden renewal fees.</span>
+              <strong class="text-slate-900 dark:text-white block font-semibold">{{ $settings['why_choose_2_title'] ?? 'Transparent Pricing' }}</strong>
+              <span class="text-slate-500">{{ $settings['why_choose_2_desc'] ?? 'No surprise price spikes or hidden renewal fees.' }}</span>
             </div>
             <div class="p-3 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-[#0B1B33]">
-              <strong class="text-slate-900 dark:text-white block font-semibold">Guaranteed Uptime</strong>
-              <span class="text-slate-500">Hardware tenant isolation prevents neighbor lag.</span>
+              <strong class="text-slate-900 dark:text-white block font-semibold">{{ $settings['why_choose_3_title'] ?? 'Guaranteed Uptime' }}</strong>
+              <span class="text-slate-500">{{ $settings['why_choose_3_desc'] ?? 'Hardware tenant isolation prevents neighbor lag.' }}</span>
             </div>
             <div class="p-3 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-[#0B1B33]">
-              <strong class="text-slate-900 dark:text-white block font-semibold">Human Support</strong>
-              <span class="text-slate-500">Direct chat with engineers who review error logs.</span>
+              <strong class="text-slate-900 dark:text-white block font-semibold">{{ $settings['why_choose_4_title'] ?? 'Human Support' }}</strong>
+              <span class="text-slate-500">{{ $settings['why_choose_4_desc'] ?? 'Direct chat with engineers who review error logs.' }}</span>
             </div>
             <div class="p-3 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-[#0B1B33]">
-              <strong class="text-slate-900 dark:text-white block font-semibold">Easy Management</strong>
-              <span class="text-slate-500">Official cPanel control with 1-click staging.</span>
+              <strong class="text-slate-900 dark:text-white block font-semibold">{{ $settings['why_choose_5_title'] ?? 'Easy Management' }}</strong>
+              <span class="text-slate-500">{{ $settings['why_choose_5_desc'] ?? 'Official cPanel control with 1-click staging.' }}</span>
             </div>
             <div class="p-3 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-[#0B1B33]">
-              <strong class="text-slate-900 dark:text-white block font-semibold">Secure Hosting</strong>
-              <span class="text-slate-500">Imunify360 machine learning virus neutralization.</span>
+              <strong class="text-slate-900 dark:text-white block font-semibold">{{ $settings['why_choose_6_title'] ?? 'Secure Hosting' }}</strong>
+              <span class="text-slate-500">{{ $settings['why_choose_6_desc'] ?? 'Imunify360 machine learning virus neutralization.' }}</span>
             </div>
           </div>
         </div>
@@ -790,7 +820,7 @@
         <div class="lg:col-span-6">
           <div class="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-900 overflow-hidden relative shadow-md">
             <img 
-              src="https://images.unsplash.com/photo-1544197150-b99a580bb7a8?auto=format&fit=crop&w=800&q=80" 
+              src="{{ $settings['why_choose_image'] ?? 'https://images.unsplash.com/photo-1544197150-b99a580bb7a8?auto=format&fit=crop&w=800&q=80' }}" 
               alt="Engineers working in server facility" 
               class="w-full h-64 sm:h-72 object-cover opacity-80"
               loading="lazy"
@@ -798,8 +828,8 @@
             <div class="absolute inset-0 bg-gradient-to-t from-[#07111F] via-transparent to-transparent"></div>
             
             <div class="absolute bottom-3 inset-x-3 bg-slate-950/80 backdrop-blur-sm border border-slate-800 rounded-lg p-2.5 flex items-center justify-between text-xs font-mono-code text-white">
-              <span><i class="fa-solid fa-circle-check text-emerald-400 mr-1"></i> 99.99% Verified SLA</span>
-              <span><i class="fa-solid fa-network-wired text-blue-400 mr-1"></i> 100 Gbps Core</span>
+              <span><i class="fa-solid fa-circle-check text-emerald-400 mr-1"></i> {{ $settings['why_choose_badge_1'] ?? '99.99% Verified SLA' }}</span>
+              <span><i class="fa-solid fa-network-wired text-blue-400 mr-1"></i> {{ $settings['why_choose_badge_2'] ?? '100 Gbps Core' }}</span>
             </div>
           </div>
         </div>
@@ -1071,6 +1101,7 @@
           </div>
         </div>
 
+        @if(($settings['section_plans_enabled'] ?? '1') === '1')
         <div class="space-y-2 text-left">
           <h4 class="font-semibold text-slate-900 dark:text-white text-xs">Hosting</h4>
           <ul class="space-y-1.5 text-[11px]">
@@ -1082,7 +1113,9 @@
             @endforeach
           </ul>
         </div>
+        @endif
 
+        @if(($settings['section_domain_enabled'] ?? '1') === '1')
         <div class="space-y-2 text-left">
           <h4 class="font-semibold text-slate-900 dark:text-white text-xs">Domains</h4>
           <ul class="space-y-1.5 text-[11px]">
@@ -1092,14 +1125,21 @@
             <li><a href="#domain-search" class="hover:text-blue-500">WHOIS Lookup</a></li>
           </ul>
         </div>
+        @endif
 
         <div class="space-y-2 text-left">
           <h4 class="font-semibold text-slate-900 dark:text-white text-xs">Support</h4>
           <ul class="space-y-1.5 text-[11px]">
+            @if(($settings['section_faq_enabled'] ?? '1') === '1')
             <li><a href="#faq" class="hover:text-blue-500">Help Center</a></li>
             <li><a href="#faq" class="hover:text-blue-500">FAQ</a></li>
+            @endif
+            @if(($settings['section_hero_enabled'] ?? '1') === '1')
             <li><a href="#hero" class="hover:text-blue-500">Server Status</a></li>
+            @endif
+            @if(($settings['section_features_enabled'] ?? '1') === '1')
             <li><a href="#features" class="hover:text-blue-500">Free Migration</a></li>
+            @endif
           </ul>
         </div>
 

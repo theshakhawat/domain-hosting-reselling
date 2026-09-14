@@ -40,6 +40,11 @@
       <i class="fa-solid fa-wand-magic-sparkles text-xs"></i>
       <span>Hero & Branding</span>
     </button>
+    <button type="button" onclick="switchTab('tab-whyus')" id="btn-tab-whyus"
+      class="tab-btn px-4 py-2 rounded-lg transition-colors flex items-center gap-2 shrink-0 text-slate-600 dark:text-slate-300 hover:text-brand-accent hover:bg-slate-50 dark:hover:bg-brand-dark/40">
+      <i class="fa-solid fa-server text-xs"></i>
+      <span>Why Choose Us</span>
+    </button>
     <button type="button" onclick="switchTab('tab-promo')" id="btn-tab-promo"
       class="tab-btn px-4 py-2 rounded-lg transition-colors flex items-center gap-2 shrink-0 text-slate-600 dark:text-slate-300 hover:text-brand-accent hover:bg-slate-50 dark:hover:bg-brand-dark/40">
       <i class="fa-solid fa-tag text-xs"></i>
@@ -442,7 +447,170 @@
     </div>
 
     <!-- ============================================================== -->
-    <!-- TAB 5: PROMO & BUNDLE -->
+    <!-- TAB 5: WHY CHOOSE US (INFRASTRUCTURE & ARCHITECTURE) -->
+    <!-- ============================================================== -->
+    <div id="tab-whyus" class="tab-pane hidden space-y-6">
+      <div class="bg-white dark:bg-brand-card rounded-2xl border border-slate-200 dark:border-brand-slate/40 shadow-sm p-6 sm:p-8 space-y-6">
+        <div class="border-b border-slate-200 dark:border-brand-slate/40 pb-3">
+          <h2 class="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
+            <i class="fa-solid fa-server text-brand-accent"></i>
+            <span>Why Builders Choose Us Configuration</span>
+          </h2>
+          <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
+            Customize the section headline, architectural narrative, server facility image, live SLA badges, and 6 benefit cards.
+          </p>
+        </div>
+
+        <!-- Headline & Subtitle -->
+        <div class="space-y-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+              Section Main Headline
+            </label>
+            <input type="text" name="why_choose_title" value="{{ old('why_choose_title', $settings['why_choose_title'] ?? 'Why builders choose NEXUSHOST.') }}"
+              class="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 dark:border-brand-slate/60 bg-slate-50 dark:bg-brand-dark text-slate-900 dark:text-white focus:outline-none focus:border-brand-accent">
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+              Architectural Difference / Intro Narrative
+            </label>
+            <textarea name="why_choose_subtitle" rows="2"
+              class="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 dark:border-brand-slate/60 bg-slate-50 dark:bg-brand-dark text-slate-900 dark:text-white focus:outline-none focus:border-brand-accent">{{ old('why_choose_subtitle', $settings['why_choose_subtitle'] ?? 'We reject the budget host model of cramming thousands of sites onto slow disks. Here is our architectural difference:') }}</textarea>
+          </div>
+        </div>
+
+        <!-- Datacenter Graphic & Badges -->
+        <div class="pt-4 border-t border-slate-100 dark:border-brand-slate/30">
+          <h3 class="text-xs font-bold text-slate-800 dark:text-slate-200 mb-3 flex items-center gap-1.5">
+            <i class="fa-solid fa-image text-blue-500"></i>
+            <span>Server Facility Image & Live Badges</span>
+          </h3>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div>
+              <label class="block text-[11px] text-slate-500 mb-1">Datacenter Photo URL</label>
+              <input type="text" name="why_choose_image" value="{{ old('why_choose_image', $settings['why_choose_image'] ?? 'https://images.unsplash.com/photo-1544197150-b99a580bb7a8?auto=format&fit=crop&w=800&q=80') }}"
+                class="w-full px-3 py-1.5 text-xs rounded-lg border border-slate-300 dark:border-brand-slate/60 bg-slate-50 dark:bg-brand-dark text-slate-900 dark:text-white focus:outline-none focus:border-brand-accent">
+            </div>
+            <div>
+              <label class="block text-[11px] text-slate-500 mb-1">Badge 1 Text (Left)</label>
+              <input type="text" name="why_choose_badge_1" value="{{ old('why_choose_badge_1', $settings['why_choose_badge_1'] ?? '99.99% Verified SLA') }}"
+                class="w-full px-3 py-1.5 text-xs rounded-lg border border-slate-300 dark:border-brand-slate/60 bg-slate-50 dark:bg-brand-dark text-slate-900 dark:text-white focus:outline-none focus:border-brand-accent">
+            </div>
+            <div>
+              <label class="block text-[11px] text-slate-500 mb-1">Badge 2 Text (Right)</label>
+              <input type="text" name="why_choose_badge_2" value="{{ old('why_choose_badge_2', $settings['why_choose_badge_2'] ?? '100 Gbps Core') }}"
+                class="w-full px-3 py-1.5 text-xs rounded-lg border border-slate-300 dark:border-brand-slate/60 bg-slate-50 dark:bg-brand-dark text-slate-900 dark:text-white focus:outline-none focus:border-brand-accent">
+            </div>
+          </div>
+        </div>
+
+        <!-- 6 Core Value Proposition Cards -->
+        <div class="pt-4 border-t border-slate-100 dark:border-brand-slate/30">
+          <h3 class="text-xs font-bold text-slate-800 dark:text-slate-200 mb-3 flex items-center gap-1.5">
+            <i class="fa-solid fa-list-check text-emerald-500"></i>
+            <span>6 Core Reasons / Feature Benefit Cards</span>
+          </h3>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            
+            <!-- Card 1 -->
+            <div class="p-3.5 rounded-xl border border-slate-200 dark:border-brand-slate/40 bg-slate-50/50 dark:bg-brand-dark/30 space-y-2">
+              <span class="text-[10px] font-mono text-blue-500 font-bold uppercase">Card 1</span>
+              <div>
+                <label class="block text-[11px] text-slate-500 mb-0.5">Title</label>
+                <input type="text" name="why_choose_1_title" value="{{ old('why_choose_1_title', $settings['why_choose_1_title'] ?? 'Fast Infrastructure') }}"
+                  class="w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-300 dark:border-brand-slate/60 bg-white dark:bg-brand-card text-slate-900 dark:text-white focus:outline-none focus:border-brand-accent">
+              </div>
+              <div>
+                <label class="block text-[11px] text-slate-500 mb-0.5">Description</label>
+                <input type="text" name="why_choose_1_desc" value="{{ old('why_choose_1_desc', $settings['why_choose_1_desc'] ?? 'Tier-IV facilities with dual redundant feeds.') }}"
+                  class="w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-300 dark:border-brand-slate/60 bg-white dark:bg-brand-card text-slate-900 dark:text-white focus:outline-none focus:border-brand-accent">
+              </div>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="p-3.5 rounded-xl border border-slate-200 dark:border-brand-slate/40 bg-slate-50/50 dark:bg-brand-dark/30 space-y-2">
+              <span class="text-[10px] font-mono text-cyan-500 font-bold uppercase">Card 2</span>
+              <div>
+                <label class="block text-[11px] text-slate-500 mb-0.5">Title</label>
+                <input type="text" name="why_choose_2_title" value="{{ old('why_choose_2_title', $settings['why_choose_2_title'] ?? 'Transparent Pricing') }}"
+                  class="w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-300 dark:border-brand-slate/60 bg-white dark:bg-brand-card text-slate-900 dark:text-white focus:outline-none focus:border-brand-accent">
+              </div>
+              <div>
+                <label class="block text-[11px] text-slate-500 mb-0.5">Description</label>
+                <input type="text" name="why_choose_2_desc" value="{{ old('why_choose_2_desc', $settings['why_choose_2_desc'] ?? 'No surprise price spikes or hidden renewal fees.') }}"
+                  class="w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-300 dark:border-brand-slate/60 bg-white dark:bg-brand-card text-slate-900 dark:text-white focus:outline-none focus:border-brand-accent">
+              </div>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="p-3.5 rounded-xl border border-slate-200 dark:border-brand-slate/40 bg-slate-50/50 dark:bg-brand-dark/30 space-y-2">
+              <span class="text-[10px] font-mono text-indigo-500 font-bold uppercase">Card 3</span>
+              <div>
+                <label class="block text-[11px] text-slate-500 mb-0.5">Title</label>
+                <input type="text" name="why_choose_3_title" value="{{ old('why_choose_3_title', $settings['why_choose_3_title'] ?? 'Guaranteed Uptime') }}"
+                  class="w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-300 dark:border-brand-slate/60 bg-white dark:bg-brand-card text-slate-900 dark:text-white focus:outline-none focus:border-brand-accent">
+              </div>
+              <div>
+                <label class="block text-[11px] text-slate-500 mb-0.5">Description</label>
+                <input type="text" name="why_choose_3_desc" value="{{ old('why_choose_3_desc', $settings['why_choose_3_desc'] ?? 'Hardware tenant isolation prevents neighbor lag.') }}"
+                  class="w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-300 dark:border-brand-slate/60 bg-white dark:bg-brand-card text-slate-900 dark:text-white focus:outline-none focus:border-brand-accent">
+              </div>
+            </div>
+
+            <!-- Card 4 -->
+            <div class="p-3.5 rounded-xl border border-slate-200 dark:border-brand-slate/40 bg-slate-50/50 dark:bg-brand-dark/30 space-y-2">
+              <span class="text-[10px] font-mono text-emerald-500 font-bold uppercase">Card 4</span>
+              <div>
+                <label class="block text-[11px] text-slate-500 mb-0.5">Title</label>
+                <input type="text" name="why_choose_4_title" value="{{ old('why_choose_4_title', $settings['why_choose_4_title'] ?? 'Human Support') }}"
+                  class="w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-300 dark:border-brand-slate/60 bg-white dark:bg-brand-card text-slate-900 dark:text-white focus:outline-none focus:border-brand-accent">
+              </div>
+              <div>
+                <label class="block text-[11px] text-slate-500 mb-0.5">Description</label>
+                <input type="text" name="why_choose_4_desc" value="{{ old('why_choose_4_desc', $settings['why_choose_4_desc'] ?? 'Direct chat with engineers who review error logs.') }}"
+                  class="w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-300 dark:border-brand-slate/60 bg-white dark:bg-brand-card text-slate-900 dark:text-white focus:outline-none focus:border-brand-accent">
+              </div>
+            </div>
+
+            <!-- Card 5 -->
+            <div class="p-3.5 rounded-xl border border-slate-200 dark:border-brand-slate/40 bg-slate-50/50 dark:bg-brand-dark/30 space-y-2">
+              <span class="text-[10px] font-mono text-amber-500 font-bold uppercase">Card 5</span>
+              <div>
+                <label class="block text-[11px] text-slate-500 mb-0.5">Title</label>
+                <input type="text" name="why_choose_5_title" value="{{ old('why_choose_5_title', $settings['why_choose_5_title'] ?? 'Easy Management') }}"
+                  class="w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-300 dark:border-brand-slate/60 bg-white dark:bg-brand-card text-slate-900 dark:text-white focus:outline-none focus:border-brand-accent">
+              </div>
+              <div>
+                <label class="block text-[11px] text-slate-500 mb-0.5">Description</label>
+                <input type="text" name="why_choose_5_desc" value="{{ old('why_choose_5_desc', $settings['why_choose_5_desc'] ?? 'Official cPanel control with 1-click staging.') }}"
+                  class="w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-300 dark:border-brand-slate/60 bg-white dark:bg-brand-card text-slate-900 dark:text-white focus:outline-none focus:border-brand-accent">
+              </div>
+            </div>
+
+            <!-- Card 6 -->
+            <div class="p-3.5 rounded-xl border border-slate-200 dark:border-brand-slate/40 bg-slate-50/50 dark:bg-brand-dark/30 space-y-2">
+              <span class="text-[10px] font-mono text-rose-500 font-bold uppercase">Card 6</span>
+              <div>
+                <label class="block text-[11px] text-slate-500 mb-0.5">Title</label>
+                <input type="text" name="why_choose_6_title" value="{{ old('why_choose_6_title', $settings['why_choose_6_title'] ?? 'Secure Hosting') }}"
+                  class="w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-300 dark:border-brand-slate/60 bg-white dark:bg-brand-card text-slate-900 dark:text-white focus:outline-none focus:border-brand-accent">
+              </div>
+              <div>
+                <label class="block text-[11px] text-slate-500 mb-0.5">Description</label>
+                <input type="text" name="why_choose_6_desc" value="{{ old('why_choose_6_desc', $settings['why_choose_6_desc'] ?? 'Imunify360 machine learning virus neutralization.') }}"
+                  class="w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-300 dark:border-brand-slate/60 bg-white dark:bg-brand-card text-slate-900 dark:text-white focus:outline-none focus:border-brand-accent">
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ============================================================== -->
+    <!-- TAB 6: PROMO & BUNDLE -->
     <!-- ============================================================== -->
     <div id="tab-promo" class="tab-pane hidden space-y-6">
       <div class="bg-white dark:bg-brand-card rounded-2xl border border-slate-200 dark:border-brand-slate/40 shadow-sm p-6 sm:p-8 space-y-6">

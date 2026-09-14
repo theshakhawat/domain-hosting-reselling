@@ -156,7 +156,7 @@
         </div>
         <div>
           <h2 class="text-sm font-bold text-slate-900 dark:text-white">Hosting Categories Manager</h2>
-          <p class="text-[11px] text-slate-400">Add or manage categories. Active categories appear as tabs on the homepage.</p>
+          <p class="text-[11px] text-slate-400">Add, edit, or delete categories. Active categories appear as tabs on the homepage.</p>
         </div>
       </div>
       <button type="button" onclick="toggleModal('categoryModal', false)" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
@@ -217,34 +217,56 @@
     <!-- Existing Categories List -->
     <div class="mt-4">
       <div class="text-xs font-bold text-slate-900 dark:text-white mb-2">Existing Categories ({{ $categories->count() }})</div>
-      <div class="divide-y divide-slate-100 dark:divide-brand-slate/30 max-h-56 overflow-y-auto">
+      <div class="divide-y divide-slate-100 dark:divide-brand-slate/30 max-h-64 overflow-y-auto pr-1">
         @foreach($categories as $cat)
-          <div class="py-2.5 flex items-center justify-between gap-3 text-xs">
-            <div class="flex items-center gap-2">
+          @php
+            $plansCount = \App\Models\HostingPlan::where('category', $cat->slug)->count();
+          @endphp
+          <div class="py-2.5 flex items-center justify-between gap-3 text-xs hover:bg-slate-50/50 dark:hover:bg-brand-dark/20 px-2 rounded-lg transition-colors">
+            <div class="flex items-center gap-2 flex-wrap">
               <span class="font-bold text-slate-900 dark:text-white">{{ $cat->name }}</span>
               <span class="px-1.5 py-0.5 rounded text-[10px] font-mono bg-slate-100 dark:bg-brand-dark text-slate-500">
                 slug: {{ $cat->slug }}
               </span>
               @if($cat->badge)
-                <span class="px-1.5 py-0.5 rounded text-[9px] font-mono uppercase bg-brand-accent/10 text-brand-accent">
+                <span class="px-1.5 py-0.5 rounded text-[9px] font-mono uppercase bg-brand-accent/10 text-brand-accent font-semibold">
                   {{ $cat->badge }}
                 </span>
               @endif
+              <span class="text-[10px] text-slate-400 font-mono">
+                (Order: {{ $cat->sort_order }})
+              </span>
             </div>
 
-            <div class="flex items-center gap-2">
+            <div class="flex items-center gap-2 shrink-0">
               <span class="text-[11px] text-slate-400 font-mono">
-                {{ \App\Models\HostingPlan::where('category', $cat->slug)->count() }} plans
+                {{ $plansCount }} {{ Str::plural('plan', $plansCount) }}
               </span>
-              @if(\App\Models\HostingPlan::where('category', $cat->slug)->count() === 0)
-                <form action="{{ route('admin.categories.destroy', $cat) }}" method="POST" onsubmit="return confirm('Delete category {{ $cat->name }}?');">
-                  @csrf
-                  @method('DELETE')
-                  <button type="submit" class="p-1 text-slate-400 hover:text-rose-500 transition-colors" title="Delete Category">
-                    <i class="fa-solid fa-trash-can text-xs"></i>
-                  </button>
-                </form>
-              @endif
+
+              <!-- Edit Category Button -->
+              <button type="button" 
+                onclick="openEditCategoryModal({{ json_encode([
+                  'id' => $cat->id,
+                  'name' => $cat->name,
+                  'slug' => $cat->slug,
+                  'badge' => $cat->badge ?? '',
+                  'sort_order' => $cat->sort_order ?? 0,
+                  'update_url' => route('admin.categories.update', $cat)
+                ]) }})" 
+                class="p-1.5 text-slate-400 hover:text-brand-accent hover:bg-slate-100 dark:hover:bg-brand-dark rounded-md transition-colors" 
+                title="Edit Category">
+                <i class="fa-solid fa-pen-to-square text-xs"></i>
+              </button>
+
+              <!-- Delete Category Button -->
+              <form action="{{ route('admin.categories.destroy', $cat) }}" method="POST" 
+                onsubmit="return confirm('Are you sure you want to delete category \'{{ addslashes($cat->name) }}\'? @if($plansCount > 0)\n\nNote: {{ $plansCount }} plan(s) in this category will be automatically reassigned to the default category so no packages are lost.@endif');">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="p-1.5 text-slate-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-500/10 rounded-md transition-colors" title="Delete Category">
+                  <i class="fa-solid fa-trash-can text-xs"></i>
+                </button>
+              </form>
             </div>
           </div>
         @endforeach
@@ -256,6 +278,78 @@
         Close
       </button>
     </div>
+  </div>
+</div>
+
+<!-- ============================================================== -->
+<!-- EDIT CATEGORY MODAL -->
+<!-- ============================================================== -->
+<div id="editCategoryModal" class="hidden fixed inset-0 z-[60] overflow-y-auto bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+  <div class="bg-white dark:bg-brand-card rounded-2xl border border-slate-200 dark:border-brand-slate/50 shadow-2xl max-w-lg w-full p-6 animate-fadeIn">
+    <div class="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-brand-slate/40">
+      <div class="flex items-center gap-2.5">
+        <div class="w-8 h-8 rounded-lg bg-blue-500/10 text-brand-accent flex items-center justify-center">
+          <i class="fa-solid fa-pen-to-square text-sm"></i>
+        </div>
+        <div>
+          <h2 class="text-sm font-bold text-slate-900 dark:text-white">Edit Category</h2>
+          <p class="text-[11px] text-slate-400">Update category name, badge, URL slug, or order.</p>
+        </div>
+      </div>
+      <button type="button" onclick="toggleModal('editCategoryModal', false)" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+        <i class="fa-solid fa-xmark text-sm"></i>
+      </button>
+    </div>
+
+    <form id="editCategoryForm" action="" method="POST" class="mt-4 space-y-4">
+      @csrf
+      @method('PUT')
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div>
+          <label class="block text-[11px] font-semibold text-slate-700 dark:text-slate-300 mb-1">
+            Category Name <span class="text-rose-500">*</span>
+          </label>
+          <input type="text" id="editCatName" name="name" required
+            class="w-full px-3 py-1.5 text-xs rounded-lg border border-slate-300 dark:border-brand-slate/60 bg-white dark:bg-brand-dark text-slate-900 dark:text-white focus:outline-none focus:border-brand-accent">
+        </div>
+        <div>
+          <label class="block text-[11px] font-semibold text-slate-700 dark:text-slate-300 mb-1">
+            URL Slug
+          </label>
+          <input type="text" id="editCatSlug" name="slug"
+            class="w-full px-3 py-1.5 text-xs font-mono rounded-lg border border-slate-300 dark:border-brand-slate/60 bg-white dark:bg-brand-dark text-slate-900 dark:text-white focus:outline-none focus:border-brand-accent">
+          <p class="text-[10px] text-slate-400 mt-0.5">Existing packages will update automatically.</p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div>
+          <label class="block text-[11px] font-semibold text-slate-700 dark:text-slate-300 mb-1">
+            Badge (e.g. Recommended)
+          </label>
+          <input type="text" id="editCatBadge" name="badge" placeholder="Optional badge text"
+            class="w-full px-3 py-1.5 text-xs rounded-lg border border-slate-300 dark:border-brand-slate/60 bg-white dark:bg-brand-dark text-slate-900 dark:text-white focus:outline-none focus:border-brand-accent">
+        </div>
+        <div>
+          <label class="block text-[11px] font-semibold text-slate-700 dark:text-slate-300 mb-1">
+            Sort Order
+          </label>
+          <input type="number" id="editCatSortOrder" name="sort_order"
+            class="w-full px-3 py-1.5 text-xs font-mono rounded-lg border border-slate-300 dark:border-brand-slate/60 bg-white dark:bg-brand-dark text-slate-900 dark:text-white focus:outline-none focus:border-brand-accent">
+        </div>
+      </div>
+
+      <div class="flex items-center justify-end gap-2 pt-3 border-t border-slate-100 dark:border-brand-slate/30">
+        <button type="button" onclick="toggleModal('editCategoryModal', false)" class="px-4 py-2 rounded-lg text-xs font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-brand-dark transition-colors">
+          Cancel
+        </button>
+        <button type="submit" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-brand-accent hover:bg-blue-600 text-white text-xs font-semibold shadow-md shadow-brand-accent/25 transition-all">
+          <i class="fa-solid fa-floppy-disk text-xs"></i>
+          <span>Save Changes</span>
+        </button>
+      </div>
+    </form>
   </div>
 </div>
 
@@ -271,13 +365,37 @@
     }
   }
 
+  function openEditCategoryModal(data) {
+    const form = document.getElementById('editCategoryForm');
+    const nameInput = document.getElementById('editCatName');
+    const slugInput = document.getElementById('editCatSlug');
+    const badgeInput = document.getElementById('editCatBadge');
+    const sortOrderInput = document.getElementById('editCatSortOrder');
+
+    if (form && data) {
+      form.action = data.update_url;
+      nameInput.value = data.name || '';
+      slugInput.value = data.slug || '';
+      badgeInput.value = data.badge || '';
+      sortOrderInput.value = data.sort_order ?? 0;
+      toggleModal('editCategoryModal', true);
+    }
+  }
+
   // Close on backdrop click
   document.getElementById('categoryModal')?.addEventListener('click', function(e) {
     if (e.target === this) {
       toggleModal('categoryModal', false);
     }
   });
+
+  document.getElementById('editCategoryModal')?.addEventListener('click', function(e) {
+    if (e.target === this) {
+      toggleModal('editCategoryModal', false);
+    }
+  });
 </script>
 @endpush
 @endsection
+
 

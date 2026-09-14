@@ -14,10 +14,10 @@ class AdminSeeder extends Seeder
     public function run(): void
     {
         User::updateOrCreate(
-            ['email' => 'admin@nexus.com'],
+            ['email' => 'admin@gmail.com'],
             [
                 'name' => 'System Administrator',
-                'password' => Hash::make('password'),
+                'password' => Hash::make('admin@gmail.com'),
                 'is_admin' => true,
                 'status' => true,
                 'phone_number' => '+880 9610-NEXUS',

@@ -168,31 +168,13 @@
         </div>
       </form>
 
-      <!-- Default Credentials Helper (Quick dev convenience) -->
-      <div class="mt-6 pt-5 border-t border-slate-200 dark:border-brand-slate/40">
-        <div class="bg-slate-100 dark:bg-brand-dark/60 rounded-lg p-3 text-[11px] text-slate-600 dark:text-slate-400">
-          <div class="font-semibold text-slate-800 dark:text-slate-200 mb-1 flex items-center gap-1.5">
-            <i class="fa-solid fa-key text-brand-cyan"></i>
-            Default Admin Credentials:
-          </div>
-          <div class="flex justify-between items-center py-0.5 font-mono">
-            <span>Email:</span>
-            <span class="text-brand-accent select-all">admin@nexus.com</span>
-          </div>
-          <div class="flex justify-between items-center py-0.5 font-mono">
-            <span>Password:</span>
-            <span class="text-brand-accent select-all">password</span>
-          </div>
-        </div>
-      </div>
-
     </div>
 
     <!-- Back to Website & Theme Toggle -->
     <div class="mt-6 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 px-1">
       <a href="{{ route('home') }}" class="inline-flex items-center gap-1.5 hover:text-brand-accent transition-colors font-medium">
         <i class="fa-solid fa-arrow-left"></i>
-        <span>Back to Live Website</span>
+        <span>Back</span>
       </a>
 
       <button type="button" onclick="toggleTheme()" class="inline-flex items-center gap-1.5 hover:text-brand-accent transition-colors">

@@ -59,6 +59,25 @@ class SettingController extends Controller
             'bundle_title' => ['nullable', 'string', 'max:255'],
             'bundle_price' => ['nullable', 'string', 'max:50'],
             'bundle_savings' => ['nullable', 'string', 'max:50'],
+
+            // Why Choose Us / Infrastructure
+            'why_choose_title' => ['nullable', 'string', 'max:255'],
+            'why_choose_subtitle' => ['nullable', 'string'],
+            'why_choose_image' => ['nullable', 'string', 'max:500'],
+            'why_choose_badge_1' => ['nullable', 'string', 'max:100'],
+            'why_choose_badge_2' => ['nullable', 'string', 'max:100'],
+            'why_choose_1_title' => ['nullable', 'string', 'max:150'],
+            'why_choose_1_desc' => ['nullable', 'string', 'max:255'],
+            'why_choose_2_title' => ['nullable', 'string', 'max:150'],
+            'why_choose_2_desc' => ['nullable', 'string', 'max:255'],
+            'why_choose_3_title' => ['nullable', 'string', 'max:150'],
+            'why_choose_3_desc' => ['nullable', 'string', 'max:255'],
+            'why_choose_4_title' => ['nullable', 'string', 'max:150'],
+            'why_choose_4_desc' => ['nullable', 'string', 'max:255'],
+            'why_choose_5_title' => ['nullable', 'string', 'max:150'],
+            'why_choose_5_desc' => ['nullable', 'string', 'max:255'],
+            'why_choose_6_title' => ['nullable', 'string', 'max:150'],
+            'why_choose_6_desc' => ['nullable', 'string', 'max:255'],
         ]);
 
         // Section toggles list

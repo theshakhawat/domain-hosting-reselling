@@ -2,6 +2,8 @@
 
 namespace Tests\Feature;
 
+use App\Models\HostingPlan;
+use App\Models\PlanCategory;
 use App\Models\SiteSetting;
 use App\Models\User;
 use App\Models\Visitor;
@@ -60,12 +62,20 @@ class AdminAdvancedFeaturesTest extends TestCase
     public function test_disabled_section_is_hidden_from_homepage(): void
     {
         SiteSetting::set('section_plans_enabled', '0');
+        SiteSetting::set('section_bundle_enabled', '0');
+        SiteSetting::set('section_domain_enabled', '0');
         SiteSetting::set('section_hero_enabled', '1');
 
         $response = $this->get('/');
 
         $response->assertStatus(200);
         $response->assertDontSee('id="hosting-plans"', false);
+        $response->assertDontSee('id="bundle"', false);
+        $response->assertDontSee('id="domain-search"', false);
+        // Assert that corresponding navbar and drawer links are also omitted
+        $response->assertDontSee('Launch Bundle', false);
+        $response->assertDontSee('Shared Hosting', false);
+        $response->assertDontSee('Domain Search', false);
         $response->assertSee('id="hero"', false);
     }
 
@@ -188,5 +198,82 @@ class AdminAdvancedFeaturesTest extends TestCase
         $homeResponse->assertSee('Alpha Reseller Pro', false);
         $homeResponse->assertSee('1,200', false);
         $homeResponse->assertSee('WP Rocket Included', false);
+    }
+
+    public function test_admin_can_update_plan_category_and_cascades_to_plans(): void
+    {
+        $category = PlanCategory::create([
+            'name' => 'Old Category',
+            'slug' => 'old-category',
+            'badge' => 'Old Badge',
+            'sort_order' => 1,
+            'is_active' => true,
+        ]);
+
+        $plan = HostingPlan::create([
+            'name' => 'Plan Under Category',
+            'category' => 'old-category',
+            'monthly_price' => 500,
+            'yearly_price' => 5000,
+            'is_active' => true,
+        ]);
+
+        $response = $this->actingAs($this->admin)->put("/admin/categories/{$category->id}", [
+            'name' => 'Updated Category',
+            'slug' => 'new-category-slug',
+            'badge' => 'Super Fast',
+            'sort_order' => 2,
+        ]);
+
+        $response->assertRedirect();
+        $this->assertDatabaseHas('plan_categories', [
+            'id' => $category->id,
+            'name' => 'Updated Category',
+            'slug' => 'new-category-slug',
+            'badge' => 'Super Fast',
+            'sort_order' => 2,
+        ]);
+
+        $this->assertDatabaseHas('hosting_plans', [
+            'id' => $plan->id,
+            'category' => 'new-category-slug',
+        ]);
+    }
+
+    public function test_admin_can_delete_plan_category_and_reassigns_plans(): void
+    {
+        $defaultCat = PlanCategory::create([
+            'name' => 'Shared Hosting',
+            'slug' => 'shared',
+            'sort_order' => 1,
+            'is_active' => true,
+        ]);
+
+        $toDelete = PlanCategory::create([
+            'name' => 'Temporary Category',
+            'slug' => 'temp-cat',
+            'sort_order' => 2,
+            'is_active' => true,
+        ]);
+
+        $plan = HostingPlan::create([
+            'name' => 'Temp Plan',
+            'category' => 'temp-cat',
+            'monthly_price' => 300,
+            'yearly_price' => 3000,
+            'is_active' => true,
+        ]);
+
+        $response = $this->actingAs($this->admin)->delete("/admin/categories/{$toDelete->id}");
+
+        $response->assertRedirect();
+        $this->assertDatabaseMissing('plan_categories', [
+            'id' => $toDelete->id,
+        ]);
+
+        $this->assertDatabaseHas('hosting_plans', [
+            'id' => $plan->id,
+            'category' => 'shared',
+        ]);
     }
 }
